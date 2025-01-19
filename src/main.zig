@@ -358,7 +358,6 @@ pub fn getPlatform() PlatformType {
 ///
 /// thread_safety: This function may be called from any thread.
 pub fn platformSupported(platform: PlatformType) bool {
-    internal_debug.assertInitialized();
     return c.glfwPlatformSupported(@intFromEnum(platform)) == c.GLFW_TRUE;
 }
 
