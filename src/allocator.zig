@@ -1,143 +1,121 @@
-// TODO: implement custom allocator support
+const std = @import("std");
+const c = @import("c.zig").c;
 
-// /*! @brief
-//  *
-//  *  @sa @ref init_allocator
-//  *  @sa @ref glfwInitAllocator
-//  *
-//  *  @since Added in version 3.4.
-//  *
-//  *  @ingroup init
-//  */
-// typedef struct GLFWallocator
-// {
-//     GLFWallocatefun allocate;
-//     GLFWreallocatefun reallocate;
-//     GLFWdeallocatefun deallocate;
-//     void* user;
-// } GLFWallocator;
+const alignment = @alignOf(std.c.max_align_t);
+const prefix_size = blk: {
+    var n = alignment;
+    while (n < @sizeOf(usize)) {
+        n += alignment;
+    }
+    break :blk n;
+};
 
-// /*! @brief The function pointer type for memory allocation callbacks.
-//  *
-//  *  This is the function pointer type for memory allocation callbacks.  A memory
-//  *  allocation callback function has the following signature:
-//  *  @code
-//  *  void* function_name(size_t size, void* user)
-//  *  @endcode
-//  *
-//  *  This function must return either a memory block at least `size` bytes long,
-//  *  or `NULL` if allocation failed.  Note that not all parts of GLFW handle allocation
-//  *  failures gracefully yet.
-//  *
-//  *  This function may be called during @ref glfwInit but before the library is
-//  *  flagged as initialized, as well as during @ref glfwTerminate after the
-//  *  library is no longer flagged as initialized.
-//  *
-//  *  Any memory allocated by this function will be deallocated during library
-//  *  termination or earlier.
-//  *
-//  *  The size will always be greater than zero.  Allocations of size zero are filtered out
-//  *  before reaching the custom allocator.
-//  *
-//  *  @param[in] size The minimum size, in bytes, of the memory block.
-//  *  @param[in] user The user-defined pointer from the allocator.
-//  *  @return The address of the newly allocated memory block, or `NULL` if an
-//  *  error occurred.
-//  *
-//  *  @pointer_lifetime The returned memory block must be valid at least until it
-//  *  is deallocated.
-//  *
-//  *  @reentrancy This function should not call any GLFW function.
-//  *
-//  *  @thread_safety This function may be called from any thread that calls GLFW functions.
-//  *
-//  *  @sa @ref init_allocator
-//  *  @sa @ref GLFWallocator
-//  *
-//  *  @since Added in version 3.4.
-//  *
-//  *  @ingroup init
-//  */
-// typedef void* (* GLFWallocatefun)(size_t size, void* user);
 
-// /*! @brief The function pointer type for memory reallocation callbacks.
-//  *
-//  *  This is the function pointer type for memory reallocation callbacks.
-//  *  A memory reallocation callback function has the following signature:
-//  *  @code
-//  *  void* function_name(void* block, size_t size, void* user)
-//  *  @endcode
-//  *
-//  *  This function must return a memory block at least `size` bytes long, or
-//  *  `NULL` if allocation failed.  Note that not all parts of GLFW handle allocation
-//  *  failures gracefully yet.
-//  *
-//  *  This function may be called during @ref glfwInit but before the library is
-//  *  flagged as initialized, as well as during @ref glfwTerminate after the
-//  *  library is no longer flagged as initialized.
-//  *
-//  *  Any memory allocated by this function will be deallocated during library
-//  *  termination or earlier.
-//  *
-//  *  The block address will never be `NULL` and the size will always be greater than zero.
-//  *  Reallocations of a block to size zero are converted into deallocations.  Reallocations
-//  *  of `NULL` to a non-zero size are converted into regular allocations.
-//  *
-//  *  @param[in] block The address of the memory block to reallocate.
-//  *  @param[in] size The new minimum size, in bytes, of the memory block.
-//  *  @param[in] user The user-defined pointer from the allocator.
-//  *  @return The address of the newly allocated or resized memory block, or
-//  *  `NULL` if an error occurred.
-//  *
-//  *  @pointer_lifetime The returned memory block must be valid at least until it
-//  *  is deallocated.
-//  *
-//  *  @reentrancy This function should not call any GLFW function.
-//  *
-//  *  @thread_safety This function may be called from any thread that calls GLFW functions.
-//  *
-//  *  @sa @ref init_allocator
-//  *  @sa @ref GLFWallocator
-//  *
-//  *  @since Added in version 3.4.
-//  *
-//  *  @ingroup init
-//  */
-// typedef void* (* GLFWreallocatefun)(void* block, size_t size, void* user);
+fn rawFromZig(buf: []align(alignment)u8, size: usize) [*]u8 {
+    const pfx = @as(*usize, @ptrCast(@alignCast(buf)));
+    pfx.* = size;
+    return @ptrCast(buf[prefix_size..]);
+}
 
-// /*! @brief The function pointer type for memory deallocation callbacks.
-//  *
-//  *  This is the function pointer type for memory deallocation callbacks.
-//  *  A memory deallocation callback function has the following signature:
-//  *  @code
-//  *  void function_name(void* block, void* user)
-//  *  @endcode
-//  *
-//  *  This function may deallocate the specified memory block.  This memory block
-//  *  will have been allocated with the same allocator.
-//  *
-//  *  This function may be called during @ref glfwInit but before the library is
-//  *  flagged as initialized, as well as during @ref glfwTerminate after the
-//  *  library is no longer flagged as initialized.
-//  *
-//  *  The block address will never be `NULL`.  Deallocations of `NULL` are filtered out
-//  *  before reaching the custom allocator.
-//  *
-//  *  @param[in] block The address of the memory block to deallocate.
-//  *  @param[in] user The user-defined pointer from the allocator.
-//  *
-//  *  @pointer_lifetime The specified memory block will not be accessed by GLFW
-//  *  after this function is called.
-//  *
-//  *  @reentrancy This function should not call any GLFW function.
-//  *
-//  *  @thread_safety This function may be called from any thread that calls GLFW functions.
-//  *
-//  *  @sa @ref init_allocator
-//  *  @sa @ref GLFWallocator
-//  *
-//  *  @since Added in version 3.4.
-//  *
-//  *  @ingroup init
-//  */
-// typedef void (* GLFWdeallocatefun)(void* block, void* user);
+fn zigFromRaw(memory: [*]u8) []align(alignment)u8 {
+    const ptr: [*]align(alignment)u8 = @alignCast(memory - prefix_size);
+    const pfx = @as(*usize, @ptrCast(ptr));
+    const content_size: usize = pfx.*;
+    const full_size: usize = content_size + prefix_size;
+    return ptr[0..full_size];
+}
+
+fn alloc(
+    size: usize,
+    user: ?*anyopaque,
+) callconv(.c) ?*anyopaque {
+    if (user == null)
+        unreachable;
+    const allocator = @as(*const std.mem.Allocator, @ptrCast(@alignCast(user.?))).*;
+    return @ptrCast(doAlloc(allocator, size));
+}
+
+fn doAlloc(
+    allocator: std.mem.Allocator,
+    size: usize,
+) ?[*]u8 {
+    const buf = allocator.allocAdvancedWithRetAddr(u8, alignment, size + prefix_size, @returnAddress()) catch return null;
+    return rawFromZig(buf, size);
+}
+
+fn realloc(
+    p_block: ?*anyopaque,
+    size: usize,
+    user: ?*anyopaque,
+) callconv(.c) ?*anyopaque {
+    if (user == null)
+        unreachable;
+    const allocator = @as(*const std.mem.Allocator, @ptrCast(@alignCast(user.?))).*;
+    if (p_block) |block| {
+        return @ptrCast(doRealloc(
+            allocator,
+            @ptrCast(block),
+            size,
+        ));
+    } else {
+        return @ptrCast(doAlloc(
+            allocator,
+            size,
+        ));
+    }
+}
+
+fn doRealloc(
+    allocator: std.mem.Allocator,
+    block: [*]u8,
+    size: usize,
+) ?[*]u8 {
+    const old_buf = zigFromRaw(block);
+    const new_buf = allocator.reallocAdvanced(old_buf, size + prefix_size, @returnAddress()) catch return null;
+    return rawFromZig(new_buf, size);
+}
+
+fn free(
+    p_block: ?*anyopaque,
+    user: ?*anyopaque,
+) callconv(.c) void {
+    if (user == null)
+        unreachable;
+    const allocator = @as(*const std.mem.Allocator, @ptrCast(@alignCast(user.?))).*;
+    if (p_block) |block| {
+        doFree(allocator, @ptrCast(block));
+    }
+}
+
+fn doFree(
+    allocator: std.mem.Allocator,
+    block: [*]u8,
+) void {
+    const buf = zigFromRaw(block);
+    allocator.free(buf);
+}
+
+/// Sets the allocator to the desired value.
+/// To use the default allocator, call this function with a `null` argument.
+///
+/// @param zig_allocator The allocator to use at the next initialization, or
+/// `null` to use the default one.
+///
+/// Possible errors include glfw.ErrorCode.InvalidValue.
+///
+/// The provided allocator pointer must stay valid until glfw is deinitialized,
+/// or initAllocator is called with a new pointer while glfw is not initialized.
+///
+/// @thread_safety This function must only be called from the main thread.
+pub inline fn initAllocator(allocator: ?*const std.mem.Allocator) void {
+    if (allocator) |zig_allocator| {
+        c.glfwInitAllocator(&.{
+            .allocate = alloc,
+            .reallocate = realloc,
+            .deallocate = free,
+            .user = @ptrCast(@constCast(zig_allocator)),
+        });
+    } else {
+        c.glfwInitAllocator(null);
+    }
+}

@@ -9,6 +9,8 @@ const errors = @import("errors.zig");
 /// Possible value for various window hints, etc.
 pub const dont_care = c.GLFW_DONT_CARE;
 
+pub const initAllocator = @import("allocator.zig").initAllocator;
+
 pub const getError = errors.getError;
 pub const mustGetError = errors.mustGetError;
 pub const getErrorCode = errors.getErrorCode;
@@ -590,4 +592,15 @@ test "rawMouseMotionSupported" {
 
 test "basic" {
     try basicTest();
+}
+
+test "initAllocator" {
+    defer clearError();
+    const alloc = std.testing.allocator;
+    initAllocator(&alloc);
+    if (!init(.{})) {
+        std.log.err("failed to initialize GLFW: {?s}", .{getErrorString()});
+        std.process.exit(1);
+    }
+    defer terminate();
 }
