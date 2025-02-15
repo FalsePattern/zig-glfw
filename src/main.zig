@@ -129,35 +129,6 @@ pub inline fn init(hints: InitHints) bool {
     return c.glfwInit() == c.GLFW_TRUE;
 }
 
-// TODO: implement custom allocator support
-//
-// /*! @brief Sets the init allocator to the desired value.
-//  *
-//  *  To use the default allocator, call this function with a `NULL` argument.
-//  *
-//  *  If you specify an allocator struct, every member must be a valid function
-//  *  pointer.  If any member is `NULL`, this function emits @ref
-//  *  GLFW_INVALID_VALUE and the init allocator is unchanged.
-//  *
-//  *  @param[in] allocator The allocator to use at the next initialization, or
-//  *  `NULL` to use the default one.
-//  *
-//  *  @errors Possible errors include @ref GLFW_INVALID_VALUE.
-//  *
-//  *  @pointer_lifetime The specified allocator is copied before this function
-//  *  returns.
-//  *
-//  *  @thread_safety This function must only be called from the main thread.
-//  *
-//  *  @sa @ref init_allocator
-//  *  @sa @ref glfwInit
-//  *
-//  *  @since Added in version 3.4.
-//  *
-//  *  @ingroup init
-//  */
-// GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator);
-
 /// Terminates the GLFW library.
 ///
 /// This function destroys all remaining windows and cursors, restores any modified gamma ramps
