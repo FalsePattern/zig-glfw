@@ -19,3 +19,5 @@ zig-out/
 
 # remove this after support for Zig 0.12.1 is dropped
 zig-cache/
+
+.direnv/
