@@ -63,7 +63,7 @@ jobs:
       # - name: test
       #   run: zig build test
   x86_64-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
     # We want to run on external PRs, but not on our own internal PRs as they'll be run by the push
     # to the branch.
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
@@ -82,6 +82,31 @@ jobs:
       - name: x86_64-macos -> x86_64-windows
         run: zig build -Dtarget=x86_64-windows
       - name: x86_64-macos -> x86_64-linux
+        run: zig build -Dtarget=x86_64-linux
+      - name: build
+        run: zig build
+      # - name: test
+      #   run: zig build test
+  aarch64-macos:
+    runs-on: macos-latest
+    # We want to run on external PRs, but not on our own internal PRs as they'll be run by the push
+    # to the branch.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - name: Setup Zig
+        run: |
+          brew uninstall --ignore-dependencies libx11 # https://github.com/ziglang/zig/issues/11066
+          brew install xz
+          sudo sh -c 'wget -c https://pkg.machengine.org/zig/zig-macos-aarch64-0.14.0-dev.1911+3bf89f55c.tar.xz -O - | tar -xJ --strip-components=1 -C /usr/local/bin'
+      - name: aarch64-macos -> x86_64-macos
+        run: zig build -Dtarget=x86_64-macos
+      - name: aarch64-macos -> x86_64-windows
+        run: zig build -Dtarget=x86_64-windows
+      - name: aarch64-macos -> x86_64-linux
         run: zig build -Dtarget=x86_64-linux
       - name: build
         run: zig build
