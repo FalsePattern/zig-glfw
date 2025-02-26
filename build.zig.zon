@@ -12,8 +12,8 @@
     },
     .dependencies = .{
         .glfw = .{
-            .url = "https://pkg.machengine.org/glfw/ec656e10d3643a3a71149bb96ae6b0831b84b677.tar.gz",
-            .hash = "12207be469bad84baed2ede75cf89ede37e1ed5ee8be62a54d2b2112c5f56a44cc89",
+            .url = "git+https://github.com/FalsePattern/glfw/?ref=master#211ec84e5fd029c84fa0d6ad42bd3b3fc770940a",
+            .hash = "1220c65d53ec2a013282abe25baac7e69f42336231cdf7b7d77117a5e22b212b41e2",
         },
     },
 }

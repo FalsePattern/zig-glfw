@@ -28,7 +28,7 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(main_tests);
     test_step.dependOn(&b.addRunArtifact(main_tests).step);
 
-    if (target.result.isDarwin()) {
+    if (target.result.os.tag.isDarwin()) {
         if (glfw_dep.builder.lazyDependency("xcode_frameworks", .{
             .target = target,
             .optimize = optimize,
