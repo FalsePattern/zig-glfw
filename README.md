@@ -53,7 +53,7 @@ Add the following to your `build.zig` below your `const exe = b.addExecutable(..
         .target = target,
         .optimize = optimize,
     });
-    exe.root_module.addImport("glfw", glfw_dep.module("zig_glfw"));
+    exe.root_module.addImport("glfw", glfw_dep.module("zig-glfw"));
 ```
 
 ### `src/main.zig`
