@@ -1,6 +1,12 @@
 .{
-    .name = "mach-glfw",
+    .name = .zig_glfw,
     .version = "0.2.0",
+    .dependencies = .{
+        .glfw = .{
+            .url = "git+https://github.com/falsepattern/glfw#211ec84e5fd029c84fa0d6ad42bd3b3fc770940a",
+            .hash = "1220c65d53ec2a013282abe25baac7e69f42336231cdf7b7d77117a5e22b212b41e2",
+        },
+    },
     .paths = .{
         "src/",
         "build.zig",
@@ -9,11 +15,5 @@
         "LICENSE-APACHE",
         "LICENSE-MIT",
         "README.md",
-    },
-    .dependencies = .{
-        .glfw = .{
-            .url = "git+https://github.com/FalsePattern/glfw/?ref=master#211ec84e5fd029c84fa0d6ad42bd3b3fc770940a",
-            .hash = "1220c65d53ec2a013282abe25baac7e69f42336231cdf7b7d77117a5e22b212b41e2",
-        },
     },
 }

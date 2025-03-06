@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
 
-    var module = b.addModule("mach-glfw", .{
+    var module = b.addModule("zig-glfw", .{
         .target = target,
         .optimize = optimize,
         .root_source_file = b.path("src/main.zig"),
