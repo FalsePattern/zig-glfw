@@ -78,7 +78,7 @@ pub fn main() !void {
     defer glfw.terminate();
 
     // Create our window
-    const window = glfw.Window.create(640, 480, "Hello, mach-glfw!", null, null, .{}) orelse {
+    const window = glfw.Window.create(640, 480, "Hello, zig-glfw!", null, null, .{}) orelse {
         std.log.err("failed to create GLFW window: {?s}", .{glfw.getErrorString()});
         return error.WindowCreationFailed;
     };
