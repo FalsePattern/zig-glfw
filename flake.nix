@@ -52,6 +52,7 @@
             sha256 = prev.src.outputHash;
           };
         });
+        zig-0_14_0 = zig-overlay.packages.${system}."0.14.0";
         zig-0_13_0 = zig-overlay.packages.${system}."0.13.0";
         zig-0_12_1 = zig-overlay.packages.${system}."0.12.1";
       in
