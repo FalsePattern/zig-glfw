@@ -6,8 +6,8 @@
 
     .dependencies = .{
         .glfw = .{
-            .url = "git+https://github.com/falsepattern/glfw#211ec84e5fd029c84fa0d6ad42bd3b3fc770940a",
-            .hash = "1220c65d53ec2a013282abe25baac7e69f42336231cdf7b7d77117a5e22b212b41e2",
+            .url = "git+https://github.com/falsepattern/glfw#10c47c86762688e029f0d6924c9f3d516e595260",
+            .hash = "glfw-3.4.0-0k2b7wiqGQBTgAAk2jiWXGpXq-jIIzbFguneUsAtUkUW",
         },
     },
 
