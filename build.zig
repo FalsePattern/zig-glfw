@@ -5,12 +5,12 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
     const target = b.standardTargetOptions(.{});
 
-    const glfw_dep = b.dependency("glfw", .{
+    const glfw_dep = b.dependency("glfw_c", .{
         .target = target,
         .optimize = optimize,
     });
 
-    var module = b.addModule("zig-glfw", .{
+    var module = b.addModule("glfw", .{
         .target = target,
         .optimize = optimize,
         .root_source_file = b.path("src/main.zig"),

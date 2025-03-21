@@ -1,13 +1,13 @@
 .{
-    .name = .zig_glfw,
-    .version = "0.2.0",
-    .fingerprint = 0xf3d4e9bf660462c3,
+    .name = .glfw,
+    .version = "0.3.0",
+    .fingerprint = 0x3bbe0a5cf7d7fc60,
     .minimum_zig_version = "0.14.0",
 
     .dependencies = .{
-        .glfw = .{
-            .url = "git+https://github.com/falsepattern/glfw#10c47c86762688e029f0d6924c9f3d516e595260",
-            .hash = "glfw-3.4.0-0k2b7wiqGQBTgAAk2jiWXGpXq-jIIzbFguneUsAtUkUW",
+        .glfw_c = .{
+            .url = "git+https://github.com/falsepattern/glfw/?ref=master#5bab509c4e34b94c18a1504c95d7e9ce5cb2d05a",
+            .hash = "glfw_c-3.4.0-_9LYGAqqGQCrRETIkV6i6xZK-JPXkGp0lUkPadI2flTL",
         },
     },
 
